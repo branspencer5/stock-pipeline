@@ -1,0 +1,10 @@
+yfinance
+pandas
+streamlit
+plotly
+sqlalchemy
+psycopg2-binary
+requests
+newsapi-python
+python-dotenv
+lxml

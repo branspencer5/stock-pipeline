@@ -6,11 +6,17 @@ import sys
 import time
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import os
+from dotenv import load_dotenv
 
 # -----------------------------------------------
 # STEP 1: Database path
 # -----------------------------------------------
-DB_PATH = "sqlite:////Users/spencer/Desktop/python-projects/stock-pipeline/stocks.db"
+
+# Load environment variables
+load_dotenv('/Users/spencer/Desktop/python-projects/stock-pipeline/.env')
+
+DB_PATH = os.getenv("DATABASE_URL")
 
 # -----------------------------------------------
 # STEP 2: Set up the short signals table
@@ -21,7 +27,7 @@ def setup_database():
     with engine.connect() as conn:
         conn.execute(sa.text("""
             CREATE TABLE IF NOT EXISTS short_signals (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 ticker TEXT NOT NULL,
                 company_name TEXT,
                 sector TEXT,

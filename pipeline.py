@@ -3,8 +3,13 @@ import pandas as pd
 import sqlalchemy as sa
 import requests
 import sys
+import os
+from dotenv import load_dotenv
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# Load environment variables
+load_dotenv('/Users/spencer/Desktop/python-projects/stock-pipeline/.env')
 
 # -----------------------------------------------
 # STEP 1: Allow period to be passed from command line
@@ -16,14 +21,14 @@ PERIOD = sys.argv[1] if len(sys.argv) > 1 else "1y"
 # STEP 2: Set up the local SQLite database
 # -----------------------------------------------
 def setup_database():
-    # Use absolute path so dashboard can always find it
-    engine = sa.create_engine("sqlite:////Users/spencer/Desktop/python-projects/stock-pipeline/stocks.db")
+    # Connect to Supabase cloud database
+    engine = sa.create_engine(os.getenv("DATABASE_URL"))
 
     with engine.connect() as conn:
         # Table for daily price history
         conn.execute(sa.text("""
             CREATE TABLE IF NOT EXISTS stock_prices (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 ticker TEXT NOT NULL,
                 date TEXT NOT NULL,
                 open REAL,
@@ -38,7 +43,7 @@ def setup_database():
         # Table for S&P 500 fundamentals
         conn.execute(sa.text("""
             CREATE TABLE IF NOT EXISTS stock_fundamentals (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 ticker TEXT NOT NULL,
                 company_name TEXT,
                 sector TEXT,

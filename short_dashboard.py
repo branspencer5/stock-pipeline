@@ -12,7 +12,10 @@ from dotenv import load_dotenv
 # -----------------------------------------------
 load_dotenv()
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
-DB_PATH = "sqlite:////Users/spencer/Desktop/python-projects/stock-pipeline/stocks.db"
+# Load environment variables
+load_dotenv('/Users/spencer/Desktop/python-projects/stock-pipeline/.env')
+
+DB_PATH = os.getenv("DATABASE_URL")
 
 def get_engine():
     return sa.create_engine(DB_PATH)

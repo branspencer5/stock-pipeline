@@ -4,14 +4,17 @@ import plotly.graph_objects as go
 import plotly.express as px
 import sqlalchemy as sa
 import ast
+import os
+from dotenv import load_dotenv
 
 # -----------------------------------------------
 # STEP 1: Connect to the SQLite database
 # -----------------------------------------------
-DB_PATH = "sqlite:////Users/spencer/Desktop/python-projects/stock-pipeline/stocks.db"
+# Load environment variables
+load_dotenv('/Users/spencer/Desktop/python-projects/stock-pipeline/.env')
 
 def get_engine():
-    return sa.create_engine(DB_PATH)
+    return sa.create_engine(os.getenv("DATABASE_URL"))
 
 # -----------------------------------------------
 # STEP 2: Load fundamentals data
