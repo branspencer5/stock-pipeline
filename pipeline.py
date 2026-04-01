@@ -45,6 +45,8 @@ def setup_database():
                 all_time_high REAL,
                 current_price REAL,
                 pct_from_ath REAL,
+                week_52_high REAL,
+                week_52_low REAL,
                 quarterly_earnings TEXT,
                 is_profitable INTEGER,
                 earnings_trend TEXT,
@@ -165,8 +167,12 @@ def fetch_fundamentals(ticker, sector, company_name):
                     else:
                         earnings_trend = "Flat"
 
-        # Get debt to equity ratio
+        # Get 52 week high and low
         info = stock.info
+        week_52_high = info.get('fiftyTwoWeekHigh', None)
+        week_52_low = info.get('fiftyTwoWeekLow', None)
+
+        # Get debt to equity ratio
         debt_to_equity = info.get('debtToEquity', None)
         if debt_to_equity:
             debt_to_equity = round(debt_to_equity, 2)
@@ -186,6 +192,8 @@ def fetch_fundamentals(ticker, sector, company_name):
             'earnings_trend': earnings_trend,
             'debt_to_equity': debt_to_equity,
             'analyst_rating': analyst_rating,
+            'week_52_high': week_52_high,
+            'week_52_low': week_52_low,
             'fetched_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
 

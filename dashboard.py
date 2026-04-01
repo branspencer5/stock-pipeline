@@ -26,6 +26,8 @@ def load_fundamentals():
             all_time_high,
             current_price,
             pct_from_ath,
+            week_52_high,
+            week_52_low,
             quarterly_earnings,
             is_profitable,
             earnings_trend,
@@ -283,6 +285,7 @@ if len(filtered) > 0:
     display_df = filtered[[
         'ticker', 'company_name', 'sector',
         'current_price', 'all_time_high', 'pct_from_ath',
+        'week_52_high', 'week_52_low',
         'is_profitable', 'earnings_trend',
         'debt_to_equity', 'analyst_rating'
     ]].copy()
@@ -291,6 +294,7 @@ if len(filtered) > 0:
     display_df.columns = [
         'Ticker', 'Company', 'Sector',
         'Current Price', 'All Time High', '% From ATH',
+        '52W High', '52W Low',
         'Profitable', 'Earnings Trend',
         'Debt/Equity', 'Analyst Rating'
     ]
@@ -299,6 +303,8 @@ if len(filtered) > 0:
     display_df['Current Price'] = display_df['Current Price'].apply(lambda x: f"${x:.2f}")
     display_df['All Time High'] = display_df['All Time High'].apply(lambda x: f"${x:.2f}")
     display_df['% From ATH'] = display_df['% From ATH'].apply(lambda x: f"{x:.1f}%")
+    display_df['52W High'] = display_df['52W High'].apply(lambda x: f"${x:.2f}" if x else "N/A")
+    display_df['52W Low'] = display_df['52W Low'].apply(lambda x: f"${x:.2f}" if x else "N/A")
     display_df['Profitable'] = display_df['Profitable'].apply(lambda x: "✅" if x == 1 else "❌")
 
     st.dataframe(display_df, use_container_width=True, height=400)
@@ -322,7 +328,7 @@ if len(filtered) > 0:
     stock_data = filtered[filtered['ticker'] == selected_stock].iloc[0]
 
     # Stock stats row
-    c1, c2, c3, c4, c5 = st.columns(5)
+    c1, c2, c3, c4, c5, c6, c7 = st.columns(7)
     with c1:
         st.metric("Current Price", f"${stock_data['current_price']:.2f}")
     with c2:
@@ -330,8 +336,12 @@ if len(filtered) > 0:
     with c3:
         st.metric("% From ATH", f"{stock_data['pct_from_ath']:.1f}%")
     with c4:
-        st.metric("Debt/Equity", f"{stock_data['debt_to_equity']:.2f}" if stock_data['debt_to_equity'] else "N/A")
+        st.metric("52 Week High", f"${stock_data['week_52_high']:.2f}" if stock_data['week_52_high'] else "N/A")
     with c5:
+        st.metric("52 Week Low", f"${stock_data['week_52_low']:.2f}" if stock_data['week_52_low'] else "N/A")
+    with c6:
+        st.metric("Debt/Equity", f"{stock_data['debt_to_equity']:.2f}" if stock_data['debt_to_equity'] else "N/A")
+    with c7:
         st.metric("Analyst Rating", stock_data['analyst_rating'] or "N/A")
 
     # Price and earnings charts side by side
