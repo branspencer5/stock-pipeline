@@ -233,7 +233,7 @@ with st.sidebar:
         "Minimum Risk Score",
         min_value=0,
         max_value=100,
-        value=40,
+        value=0,
         step=5
     )
 
